@@ -1,4 +1,6 @@
 import { makeAutoObservable } from 'mobx';
+import { addNewUser } from '../api/apiAuth';
+import { fetchAllUsers } from '../api/apiUsers';
 
 class Users {
   userList: {
@@ -14,11 +16,17 @@ class Users {
     makeAutoObservable(this);
   }
 
-  fetchGetAllUsers() {
+  async fetchGetAllUsers() {
     console.log('all users');
-    fetch('http://localhost:5000/users')
-      .then((response) => response.json())
-      .then((json) => (this.userList = json));
+    const { data } = await fetchAllUsers();
+    console.log(data);
+    this.userList = data;
+  }
+
+  async addNewUser(email?: string, password?: string) {
+    console.log('add user');
+    const user = await addNewUser(email, password);
+    console.log(user);
   }
 }
 
